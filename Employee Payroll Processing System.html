@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PayrollPro – Employee Payroll Processing System</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f5f4fb;--card:#fff;--ink:#1b2347;--mut:#6b7194;--navy:#1e2a5a;--pur:#6c3fd1;--pur2:#ede7fb;--line:#e4e6f2;--ok:#17915f;--bad:#d44848;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1228;--card:#181c3a;--ink:#e8eaf8;--mut:#9aa0c8;--pur:#9a78f5;--pur2:#2a2358;--line:#2a2f58}}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3{margin:0;color:var(--ink)}h1{font-size:22px}h2{font-size:16px}
+button,input,select{font:inherit;color:inherit}
+.btn{background:var(--pur);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:600}
+.btn:hover{filter:brightness(1.1)}.btn.o{background:transparent;color:var(--pur);border:1px solid var(--pur)}.btn.d{background:var(--bad)}.btn.s{padding:5px 10px;font-size:12px}
+input,select{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--pur);outline-offset:1px}
+label{display:block;font-size:12px;color:var(--mut);margin-bottom:4px;font-weight:600}
+#login{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.hero{background:linear-gradient(150deg,#1e2a5a,#4b2fa0);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:center}
+.hero h1{color:#fff;font-size:38px;line-height:1.15;margin:16px 0}.hero p{opacity:.85;max-width:420px}
+.lbox{display:flex;align-items:center;justify-content:center;padding:24px;background:var(--card)}
+.lbox form{width:100%;max-width:340px;display:grid;gap:14px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}.logo i{width:34px;height:34px;border-radius:9px;background:var(--pur);display:grid;place-items:center;font-style:normal;color:#fff}
+#app{display:none}
+aside{position:fixed;inset:0 auto 0 0;width:236px;background:var(--navy);color:#cfd4f5;padding:calc(env(safe-area-inset-top,0px) + 18px) 14px 18px;z-index:20;display:flex;flex-direction:column;gap:4px;transition:transform .25s}
+aside .logo{color:#fff;margin:0 8px 18px}
+aside a{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:9px;cursor:pointer;color:#cfd4f5}
+aside a:hover{background:rgba(255,255,255,.08)}aside a.on{background:var(--pur);color:#fff;font-weight:600}
+aside a span{width:18px;text-align:center}
+main{margin-left:236px;padding:24px;min-height:100vh}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}.top .sp{flex:1}
+#burger{display:none}
+.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.stat{display:flex;gap:14px;align-items:center}.stat b{display:block;font-size:24px}.stat small{color:var(--mut)}
+.ic{width:44px;height:44px;border-radius:11px;background:var(--pur2);color:var(--pur);display:grid;place-items:center;font-size:20px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:560px}
+th{text-align:left;font-size:12px;color:var(--mut);padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}tr:last-child td{border:0}
+.tag{padding:2px 9px;border-radius:99px;background:var(--pur2);color:var(--pur);font-size:12px;font-weight:600}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:end}.bar>*{flex:1;min-width:150px}.bar .btn{flex:0 0 auto}
+.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
+.net{font-size:26px;font-weight:800;color:var(--pur)}
+.modal{position:fixed;inset:0;background:rgba(10,14,40,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.on{display:flex}.modal .card{width:100%;max-width:560px;max-height:90vh;overflow:auto;animation:pop .18s}
+@keyframes pop{from{transform:scale(.95);opacity:0}}
+#toast{position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:9px;z-index:99;display:none}
+#slip{background:#fff;color:#111;border:1px solid #ccd;border-radius:6px;padding:28px;max-width:760px}
+#slip h2,#slip h3{color:#1e2a5a}#slip td,#slip th{color:#111;border-color:#ddd}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.tabs .btn{background:var(--card);color:var(--ink);border:1px solid var(--line)}.tabs .btn.on{background:var(--pur);color:#fff;border-color:var(--pur)}
+canvas{max-height:280px}
+@media (max-width:900px){#login{grid-template-columns:1fr}.hero{display:none}aside{transform:translateX(-100%)}aside.open{transform:none}main{margin-left:0;padding:16px}#burger{display:inline-block}}
+@media print{body *{visibility:hidden}#slip,#slip *{visibility:visible}#slip{position:absolute;left:0;top:0;width:100%;border:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="login"><div class="hero"><div class="logo"><i>₹</i>PayrollPro</div><h1>Payroll that runs itself, accurately.</h1><p>Manage employees, attendance, deductions and salary slips from one dashboard.</p></div>
+<div class="lbox"><form onsubmit="return doLogin(event)"><div><h1>Admin sign in</h1><p style="color:var(--mut);margin:4px 0 0">Demo login: admin / admin123</p></div>
+<div><label>Username</label><input id="lu" value="admin" autocomplete="username"></div>
+<div><label>Password</label><input id="lp" type="password" value="admin123" autocomplete="current-password"></div>
+<div id="lerr" style="color:var(--bad)"></div><button class="btn">Sign in</button></form></div></div>
+<div id="app"><aside id="side"></aside><main><div class="top"><button class="btn o s" id="burger" onclick="side.classList.toggle('open')">Menu</button><h1 id="ttl"></h1><div class="sp"></div><span class="tag">Admin</span><button class="btn o s" onclick="logout()">Sign out</button></div><div id="view"></div></main></div>
+<div class="modal" id="modal"><div class="card" id="mbody"></div></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),fmt=n=>'₹'+Math.round(n).toLocaleString('en-IN'),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MONTHS=['2026-11','2026-10','2026-09','2026-08','2026-07','2026-06'],CUR='2026-11',DEPTS=['IT','HR','Finance','Sales','Marketing','Operations'];
+const ml=m=>new Date(m+'-01T00:00:00').toLocaleString('en-US',{month:'long',year:'numeric'});
+const NAV=[['dashboard','Dashboard','▦'],['employees','Employees','☻'],['payroll','Process Payroll','₹'],['attendance','Attendance','✔'],['slips','Salary Slips','▤'],['history','Payroll History','⟲'],['reports','Reports','▲']];
+function calc(b,o={}){const hra=o.hra??Math.round(b*.4),al=o.allow??Math.round(b*.1),bo=o.bonus||0,ot=o.ot||0,gross=b+hra+al+bo+ot,pf=o.pf??Math.round(b*.12),esi=o.esi??(gross<=21000?Math.round(gross*.0075):0),tax=o.tax??(gross>80000?Math.round(gross*.1):gross>50000?Math.round(gross*.05):0),other=o.other||0,ded=pf+esi+tax+other;return{basic:b,hra,allow:al,bonus:bo,ot,gross,pf,esi,tax,other,ded,net:gross-ded}}
+function seed(){const E=[['Arun Kumar','IT','Software Engineer',62000],['Priya Sharma','HR','HR Manager',55000],['Karthik Raja','Finance','Accountant',48000],['Divya Lakshmi','IT','QA Engineer',45000],['Mohammed Faizal','Sales','Sales Executive',38000],['Sneha Reddy','Marketing','Marketing Lead',52000],['Vikram Singh','Operations','Operations Manager',70000],['Ananya Iyer','Finance','Senior Accountant',58000],['Rahul Nair','IT','DevOps Engineer',66000],['Meena Kumari','HR','Recruiter',34000]];
+const s={emps:[],recs:[],att:{},today:{},nid:11};
+E.forEach((e,i)=>{const id='EMP'+String(i+1).padStart(3,'0');s.emps.push({id,name:e[0],dept:e[1],desig:e[2],join:`202${i%4}-0${(i%9)+1}-1${i%9}`,email:e[0].toLowerCase().replace(/ /g,'.')+'@payrollpro.com',phone:'98400'+String(10000+i*3791).slice(0,5),basic:e[3]});
+s.today[id]=i%5==3?'A':i%7==2?'L':'P';
+MONTHS.forEach((m,mi)=>{const cur=m===CUR,p=cur?18-(i%3):24-((i+mi)%3),l=i%2,a=(cur?20:26)-p-l;(s.att[m]=s.att[m]||{})[id]={p,a,l};
+if(!cur){const c=calc(e[3],{bonus:mi%2?1000:0,ot:((i*7+mi*13)%6)*500,other:(i%3)*200});s.recs.push({emp:id,month:m,...c,date:m+'-28'})}})});return s}
+let S;try{S=JSON.parse(localStorage.getItem('pps_v1'))}catch(e){}if(!S||!S.emps)S=seed();
+const save=()=>{try{localStorage.setItem('pps_v1',JSON.stringify(S))}catch(e){}};
+const emp=id=>S.emps.find(e=>e.id===id)||{name:'(removed)',dept:'-',desig:'-',id};
+const toast=t=>{const x=$('#toast');x.textContent=t;x.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>x.style.display='none',2400)};
+const modal=h=>{$('#mbody').innerHTML=h;$('#modal').classList.add('on')},closeM=()=>$('#modal').classList.remove('on');
+const confirmM=(t,fn)=>{window._cf=fn;modal(`<h2>${t}</h2><p style="color:var(--mut)">This cannot be undone.</p><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn o" onclick="closeM()">Cancel</button><button class="btn d" onclick="closeM();_cf()">Delete</button></div>`)};
+function doLogin(e){e.preventDefault();if($('#lu').value==='admin'&&$('#lp').value==='admin123'){$('#login').style.display='none';$('#app').style.display='block';go('dashboard')}else $('#lerr').textContent='Incorrect username or password.';return false}
+function logout(){$('#app').style.display='none';$('#login').style.display='grid'}
+let page='dashboard',charts={};
+function chart(id,cfg){charts[id]&&charts[id].destroy();const c=$('#'+id);if(!c||!window.Chart)return;Chart.defaults.color=getComputedStyle(document.documentElement).getPropertyValue('--mut');charts[id]=new Chart(c,cfg)}
+const PAL=['#6c3fd1','#1e2a5a','#a78bfa','#3b4a9b','#c4b5fd','#5b6cc0'];
+function go(p){page=p;$('#side').classList.remove('open');$('#side').innerHTML='<div class="logo"><i>₹</i>PayrollPro</div>'+NAV.map(n=>`<a class="${n[0]===p?'on':''}" onclick="go('${n[0]}')"><span>${n[2]}</span>${n[1]}</a>`).join('');$('#ttl').textContent=NAV.find(n=>n[0]===p)[1];$('#view').innerHTML=P[p]();(A[p]||(()=>{}))();scrollTo(0,0)}
+const opts=(a,sel)=>a.map(x=>`<option value="${x[0]}" ${x[0]===sel?'selected':''}>${x[1]}</option>`).join('');
+const eo=sel=>opts(S.emps.map(e=>[e.id,e.id+' – '+e.name]),sel),mo=sel=>opts(MONTHS.map(m=>[m,ml(m)]),sel);
+const tbl=(h,rows)=>`<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${h.length}" style="text-align:center;color:var(--mut)">No records found. Adjust the filters or process a payroll.</td></tr>`}</tbody></table></div>`;
+const latest=()=>MONTHS.find(m=>S.recs.some(r=>r.month===m));
+const P={},A={};
+P.dashboard=()=>{const lm=latest(),R=S.recs.filter(r=>r.month===lm),pr=S.emps.filter(e=>S.today[e.id]==='P').length,ab=S.emps.filter(e=>S.today[e.id]==='A').length;
+const st=(i,v,l)=>`<div class="card stat"><div class="ic">${i}</div><div><b>${v}</b><small>${l}</small></div></div>`;
+return`<div class="grid g4">${st('☻',S.emps.length,'Total employees')}${st('₹',fmt(R.reduce((a,r)=>a+r.net,0)),'Monthly payroll'+(lm?' ('+ml(lm)+')':''))}${st('✔',pr,'Present today')}${st('✖',ab,'Absent today')}</div>
+<div class="grid g2" style="margin-top:16px"><div class="card"><h2>Salary overview</h2><canvas id="c1"></canvas></div><div class="card"><h2>Employees by department</h2><canvas id="c2"></canvas></div></div>
+<div class="card" style="margin-top:16px"><h2 style="margin-bottom:8px">Recent payroll transactions</h2>${tbl(['Employee','Month','Gross','Deductions','Net salary'],[...S.recs].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6).map(r=>[esc(emp(r.emp).name),ml(r.month),fmt(r.gross),fmt(r.ded),'<b>'+fmt(r.net)+'</b>']))}</div>`};
+A.dashboard=()=>{const ms=[...MONTHS].reverse();chart('c1',{type:'bar',data:{labels:ms.map(m=>ml(m).slice(0,3)),datasets:[{label:'Net payroll',data:ms.map(m=>S.recs.filter(r=>r.month===m).reduce((a,r)=>a+r.net,0)),backgroundColor:'#6c3fd1',borderRadius:6},{label:'Deductions',data:ms.map(m=>S.recs.filter(r=>r.month===m).reduce((a,r)=>a+r.ded,0)),backgroundColor:'#1e2a5a',borderRadius:6}]}});
+chart('c2',{type:'doughnut',data:{labels:DEPTS,datasets:[{data:DEPTS.map(d=>S.emps.filter(e=>e.dept===d).length),backgroundColor:PAL}]}})};
+P.employees=()=>`<div class="card"><div class="bar"><div><label>Search</label><input id="q" placeholder="Name, ID or department" oninput="empTbl()"></div><button class="btn" onclick="empForm()">Add employee</button></div><div id="et"></div></div>`;
+function empTbl(){const q=($('#q').value||'').toLowerCase();$('#et').innerHTML=tbl(['ID','Name','Department','Designation','Joined','Email','Phone','Basic salary','Actions'],S.emps.filter(e=>(e.id+e.name+e.dept).toLowerCase().includes(q)).map(e=>[e.id,'<b>'+esc(e.name)+'</b>',`<span class="tag">${esc(e.dept)}</span>`,esc(e.desig),e.join,esc(e.email),esc(e.phone),fmt(e.basic),`<button class="btn o s" onclick="empForm('${e.id}')">Edit</button> <button class="btn d s" onclick="confirmM('Delete ${esc(e.name)}?',()=>delEmp('${e.id}'))">Delete</button>`]))}
+A.employees=empTbl;
+function empForm(id){const e=id?emp(id):{name:'',dept:'IT',desig:'',join:'2026-11-01',email:'',phone:'',basic:30000};window._eid=id;
+modal(`<h2 style="margin-bottom:14px">${id?'Edit employee '+id:'Add new employee'}</h2><div class="form"><div><label>Employee name</label><input id="f1" value="${esc(e.name)}"></div><div><label>Department</label><select id="f2">${opts(DEPTS.map(d=>[d,d]),e.dept)}</select></div><div><label>Designation</label><input id="f3" value="${esc(e.desig)}"></div><div><label>Joining date</label><input id="f4" type="date" value="${e.join}"></div><div><label>Email</label><input id="f5" type="email" value="${esc(e.email)}"></div><div><label>Phone number</label><input id="f6" value="${esc(e.phone)}"></div><div><label>Basic salary (₹)</label><input id="f7" type="number" min="0" value="${e.basic}"></div></div><div id="ferr" style="color:var(--bad);margin-top:8px"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn o" onclick="closeM()">Cancel</button><button class="btn" onclick="saveEmp()">Save employee</button></div>`)}
+function saveEmp(){const v=i=>$('#f'+i).value.trim(),d={name:v(1),dept:v(2),desig:v(3),join:v(4),email:v(5),phone:v(6),basic:+v(7)};
+if(!d.name||!d.desig||!d.join||!/^\S+@\S+\.\S+$/.test(d.email)||!/^\d{10}$/.test(d.phone)||!(d.basic>0)){$('#ferr').textContent='Fill every field. Use a valid email, a 10-digit phone number and a salary above 0.';return}
+if(_eid)Object.assign(emp(_eid),d);else{const id='EMP'+String(S.nid++).padStart(3,'0');S.emps.push({id,...d});S.today[id]='P';MONTHS.forEach(m=>(S.att[m]=S.att[m]||{})[id]={p:0,a:0,l:0})}
+save();closeM();empTbl();toast('Employee saved')}
+function delEmp(id){S.emps=S.emps.filter(e=>e.id!==id);S.recs=S.recs.filter(r=>r.emp!==id);save();empTbl();toast('Employee deleted')}
+const F=[['hra','HRA'],['allow','Allowances'],['bonus','Bonus'],['ot','Overtime'],['pf','PF deduction'],['esi','ESI deduction'],['tax','Tax deduction'],['other','Other deductions']];
+P.payroll=()=>`<div class="grid g2"><div class="card"><h2 style="margin-bottom:14px">Salary details</h2><div class="form"><div><label>Employee</label><select id="pe" onchange="fillPay()">${eo()}</select></div><div><label>Payroll month</label><select id="pm">${mo(CUR)}</select></div><div><label>Basic salary (₹)</label><input id="pb" type="number" oninput="fillPay(1)"></div>${F.map(f=>`<div><label>${f[1]} (₹)</label><input id="p_${f[0]}" type="number" min="0" oninput="sumPay()"></div>`).join('')}</div></div>
+<div class="card"><h2 style="margin-bottom:10px">Summary</h2><div id="ps"></div><div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn" onclick="procPay()">Process payroll</button><button class="btn o" onclick="fillPay()">Reset to defaults</button></div></div></div>`;
+A.payroll=()=>fillPay();
+function fillPay(keep){const e=emp($('#pe').value);if(!keep)$('#pb').value=e.basic;const c=calc(+$('#pb').value||0);F.forEach(f=>{if(!(keep&&['bonus','ot','other'].includes(f[0])))$('#p_'+f[0]).value=c[f[0]]});sumPay()}
+function readPay(){const g=k=>+$('#p_'+k).value||0;return calc(+$('#pb').value||0,{hra:g('hra'),allow:g('allow'),bonus:g('bonus'),ot:g('ot'),pf:g('pf'),esi:g('esi'),tax:g('tax'),other:g('other')})}
+function sumPay(){const c=readPay();$('#ps').innerHTML=`<div class="row"><span>Basic salary</span><b>${fmt(c.basic)}</b></div><div class="row"><span>HRA + Allowances</span><b>${fmt(c.hra+c.allow)}</b></div><div class="row"><span>Bonus + Overtime</span><b>${fmt(c.bonus+c.ot)}</b></div><div class="row"><span>Gross salary</span><b>${fmt(c.gross)}</b></div><div class="row"><span>Total deductions</span><b style="color:var(--bad)">− ${fmt(c.ded)}</b></div><div style="margin-top:12px;color:var(--mut)">Net salary</div><div class="net">${fmt(c.net)}</div>`}
+function procPay(){const c=readPay(),emp_=$('#pe').value,m=$('#pm').value;if(!(c.basic>0)){toast('Enter a basic salary above 0');return}S.recs=S.recs.filter(r=>!(r.emp===emp_&&r.month===m));S.recs.push({emp:emp_,month:m,...c,date:new Date().toISOString().slice(0,10)});save();modal(`<h2>Payroll processed</h2><p>${esc(emp(emp_).name)} – ${ml(m)}: net salary <b>${fmt(c.net)}</b>.</p><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn o" onclick="closeM()">Close</button><button class="btn" onclick="closeM();slipSel='${emp_}|${m}';go('slips')">View salary slip</button></div>`)}
+let attM=CUR;
+P.attendance=()=>`<div class="card"><div class="bar"><div><label>Month</label><select id="am" onchange="attM=this.value;attTbl()">${mo(attM)}</select></div></div><div id="at"></div></div>`;
+function attTbl(){const D=attM===CUR?20:26,at=S.att[attM]||{};$('#at').innerHTML=tbl(['Employee','Present','Absent','Leave','Attendance %','Today'],S.emps.map(e=>{const a=at[e.id]||{p:0,a:0,l:0},n=(k)=>`<input type="number" min="0" max="31" style="width:72px" value="${a[k]}" onchange="setAtt('${e.id}','${k}',this.value)">`;return[esc(e.name)+' <small style="color:var(--mut)">'+e.id+'</small>',n('p'),n('a'),n('l'),Math.round(a.p/D*100)+'%',`<select style="width:110px" onchange="S.today['${e.id}']=this.value;save();toast('Updated')">${opts([['P','Present'],['A','Absent'],['L','On leave']],S.today[e.id])}</select>`]}))+`<p style="color:var(--mut)">Summary: ${S.emps.reduce((a,e)=>a+((at[e.id]||{}).p||0),0)} present days, ${S.emps.reduce((a,e)=>a+((at[e.id]||{}).a||0),0)} absent days, ${S.emps.reduce((a,e)=>a+((at[e.id]||{}).l||0),0)} leave days across ${S.emps.length} employees (${D} working days).</p>`}
+A.attendance=attTbl;
+function setAtt(id,k,v){(S.att[attM]=S.att[attM]||{})[id]=S.att[attM][id]||{p:0,a:0,l:0};S.att[attM][id][k]=Math.max(0,+v||0);save();attTbl();toast('Attendance saved')}
+let slipSel='';
+P.slips=()=>{const R=[...S.recs].sort((a,b)=>b.month.localeCompare(a.month)||a.emp.localeCompare(b.emp));if(!slipSel&&R[0])slipSel=R[0].emp+'|'+R[0].month;
+return`<div class="bar"><div><label>Select salary record</label><select id="ss" onchange="slipSel=this.value;slipDraw()">${opts(R.map(r=>[r.emp+'|'+r.month,emp(r.emp).name+' – '+ml(r.month)]),slipSel)}</select></div><button class="btn" onclick="print()">Print / Save as PDF</button></div><div id="slip"></div>`};
+function slipDraw(){const [id,m]=slipSel.split('|'),r=S.recs.find(x=>x.emp===id&&x.month===m);if(!r){$('#slip').innerHTML='<p>No salary records yet. Process a payroll first.</p>';return}const e=emp(id),row=(a,b)=>`<tr><td>${a}</td><td style="text-align:right">${fmt(b)}</td></tr>`;
+$('#slip').innerHTML=`<div style="display:flex;justify-content:space-between;border-bottom:2px solid #6c3fd1;padding-bottom:10px"><div><h2 style="font-size:20px">PayrollPro Technologies Pvt Ltd</h2><small>Chennai, Tamil Nadu, India</small></div><div style="text-align:right"><h3>Salary Slip</h3><small>${ml(m)}</small></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;margin:14px 0"><span><b>Employee:</b> ${esc(e.name)}</span><span><b>ID:</b> ${e.id}</span><span><b>Department:</b> ${esc(e.dept)}</span><span><b>Designation:</b> ${esc(e.desig)}</span><span><b>Joined:</b> ${e.join}</span><span><b>Paid on:</b> ${r.date}</span></div>
+<div class="tw"><table style="min-width:0"><thead><tr><th>Earnings</th><th style="text-align:right">Amount</th></tr></thead><tbody>${row('Basic salary',r.basic)+row('HRA',r.hra)+row('Allowances',r.allow)+row('Bonus',r.bonus)+row('Overtime',r.ot)}<tr><td><b>Total earnings</b></td><td style="text-align:right"><b>${fmt(r.gross)}</b></td></tr></tbody>
+<thead><tr><th>Deductions</th><th style="text-align:right">Amount</th></tr></thead><tbody>${row('PF',r.pf)+row('ESI',r.esi)+row('Tax',r.tax)+row('Other',r.other)}<tr><td><b>Total deductions</b></td><td style="text-align:right"><b>${fmt(r.ded)}</b></td></tr></tbody></table></div>
+<div style="background:#ede7fb;padding:14px;border-radius:8px;display:flex;justify-content:space-between;margin-top:14px"><b>Net salary</b><b style="font-size:20px;color:#6c3fd1">${fmt(r.net)}</b></div><p style="font-size:11px;color:#555;margin-bottom:0">This is a computer-generated salary slip and needs no signature.</p>`}
+A.slips=slipDraw;
+P.history=()=>`<div class="card"><div class="bar"><div><label>Search employee</label><input id="hq" placeholder="Name or ID" oninput="hist()"></div><div><label>Month</label><select id="hm" onchange="hist()"><option value="">All months</option>${mo()}</select></div><div><label>Department</label><select id="hd" onchange="hist()"><option value="">All departments</option>${opts(DEPTS.map(d=>[d,d]))}</select></div></div><div id="ht"></div></div>`;
+function hist(){const q=$('#hq').value.toLowerCase(),m=$('#hm').value,d=$('#hd').value;const R=S.recs.filter(r=>(!m||r.month===m)&&(!d||emp(r.emp).dept===d)&&(emp(r.emp).name+r.emp).toLowerCase().includes(q)).sort((a,b)=>b.month.localeCompare(a.month)||a.emp.localeCompare(b.emp));
+$('#ht').innerHTML=tbl(['Employee','Department','Month','Gross','Deductions','Net salary','Actions'],R.map(r=>[esc(emp(r.emp).name),emp(r.emp).dept,ml(r.month),fmt(r.gross),fmt(r.ded),'<b>'+fmt(r.net)+'</b>',`<button class="btn o s" onclick="slipSel='${r.emp}|${r.month}';go('slips')">Slip</button> <button class="btn d s" onclick="confirmM('Delete this record?',()=>{S.recs=S.recs.filter(x=>!(x.emp==='${r.emp}'&&x.month==='${r.month}'));save();hist()})">Delete</button>`]))+`<p style="color:var(--mut)">${R.length} records, total net ${fmt(R.reduce((a,r)=>a+r.net,0))}</p>`}
+A.history=hist;
+let rep='monthly',rm='2026-10',RD;
+P.reports=()=>`<div class="tabs">${[['monthly','Monthly payroll'],['employee','Employee salary'],['attendance','Attendance'],['dept','Department-wise']].map(t=>`<button class="btn s ${rep===t[0]?'on':''}" onclick="rep='${t[0]}';go('reports')">${t[1]}</button>`).join('')}</div><div class="card"><div class="bar"><div><label>Month</label><select id="rm" onchange="rm=this.value;repDraw()">${mo(rm)}</select></div><button class="btn" onclick="csv()">Download CSV</button><button class="btn o" onclick="print()">Print</button></div><canvas id="rc" style="margin-bottom:14px"></canvas><div id="rt"></div></div>`;
+function repDraw(){const R=S.recs.filter(r=>r.month===rm),at=S.att[rm]||{};let h,rows,lab,val;
+if(rep==='monthly'){h=['Employee','Department','Gross','Deductions','Net'];rows=R.map(r=>[emp(r.emp).name,emp(r.emp).dept,r.gross,r.ded,r.net]);lab=R.map(r=>emp(r.emp).name.split(' ')[0]);val=R.map(r=>r.net)}
+else if(rep==='employee'){h=['ID','Employee','Designation','Basic','Net (selected month)','Total paid (all months)'];rows=S.emps.map(e=>[e.id,e.name,e.desig,e.basic,(R.find(r=>r.emp===e.id)||{net:0}).net,S.recs.filter(r=>r.emp===e.id).reduce((a,r)=>a+r.net,0)]);lab=S.emps.map(e=>e.name.split(' ')[0]);val=rows.map(r=>r[5])}
+else if(rep==='attendance'){h=['Employee','Present','Absent','Leave','Attendance %'];rows=S.emps.map(e=>{const a=at[e.id]||{p:0,a:0,l:0};return[e.name,a.p,a.a,a.l,Math.round(a.p/(rm===CUR?20:26)*100)+'%']});lab=S.emps.map(e=>e.name.split(' ')[0]);val=rows.map(r=>parseInt(r[4]))}
+else{h=['Department','Employees','Total gross','Total net','Average net'];rows=DEPTS.map(d=>{const x=R.filter(r=>emp(r.emp).dept===d);return[d,S.emps.filter(e=>e.dept===d).length,x.reduce((a,r)=>a+r.gross,0),x.reduce((a,r)=>a+r.net,0),x.length?x.reduce((a,r)=>a+r.net,0)/x.length:0]});lab=DEPTS;val=rows.map(r=>r[3])}
+RD={h,rows};const money=rep!=='attendance';$('#rt').innerHTML=tbl(h,rows.map(r=>r.map((c,i)=>typeof c==='number'&&money&&!(rep==='dept'&&i===1)?fmt(c):c)));
+chart('rc',{type:rep==='dept'?'doughnut':'bar',data:{labels:lab,datasets:[{label:rep==='attendance'?'Attendance %':'Amount',data:val,backgroundColor:rep==='dept'?PAL:'#6c3fd1',borderRadius:5}]},options:{plugins:{legend:{display:rep==='dept'}}}})}
+A.reports=repDraw;
+function csv(){const t=[RD.h,...RD.rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download='payroll-'+rep+'-'+rm+'.csv';a.click();toast('Report downloaded')}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeM()});
+</script></body></html>
